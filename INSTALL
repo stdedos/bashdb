@@ -8,17 +8,12 @@ SHORT INSTRUCTIONS:
    and ungzip/untar it. If you are reading this, you've
    probably done that already.
 
-1. Make your current directory the debugger directory. If you want
-   the bash extension command readarray that speeds up loading of
-   large scripts than read step 3 of the long instructions especially
-   down at the bottom. Basically to speed up the initialy debugger
-   loading, you need the bash source headers and need to run
-   configure using --with-bash-src.
+1. Make your current directory the debugger directory.
 
    configure, build, test, and install the debugger:
 
        cd bashdb-4.x... # <-- put name of release for 4.x...
-       ./configure      # use --with-bash-src to speed up bash debugging
+       ./configure
        make && make check
        su -c 'make install'
 
@@ -92,8 +87,12 @@ instructions.
    On those OS's that support it, it is possible to create an
    extension which allows bashdb to set $0 (from "bashdb") to the
    program being debugged. For this you need the bash source or at
-   least the headers since we need to compile against that. And you
-   need to tell configure where to use it via --with-bash-src.
+   least the headers since we need to compile against that.
+
+   For bash versions prior to 5.0, you may opt in for the bash extension
+   command readarray that speeds up loading of large scripts. Basically
+   to speed up the initial debugger load, you need the bash source
+   headers and need to run configure using --with-bash-src.
 
    It is important that the source match the bash that is going to be
    used when debugger. For example using bash release 4.1 source for
@@ -107,7 +106,6 @@ instructions.
 
 4. configure the debugger to suit your needs:
      ./configure  # you may want to add options gleened from step 3 above.
-                  # in particular --with-bash-src.
 
    There is a lot of verbiage, but do pay attention to any errors or
    warning you see here.
