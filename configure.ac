@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 # Copyright (C) 2002-2012,
-# 2014-2018 Rocky Bernstein <rocky@gnu.org>
+# 2014-2019, 2021 Rocky Bernstein <rocky@gnu.org>
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ dnl Process this file with autoconf to produce a configure script.
 
 define(DEBUGGER, bashdb)
 define(POSIXSHELL, bash)
-define(OK_BASH_VERS, 4.4)
-define(relstatus, 1.0.2git)
+define(OK_BASH_VERS, 5.1)
+define(relstatus, 1.1.2)
 
 AC_INIT([bashdb],
   [OK_BASH_VERS-relstatus],
@@ -41,40 +41,17 @@ AM_INIT_AUTOMAKE([foreign])
 AM_MAINTAINER_MODE
 
 
-# From fish's configure.ac
-#
 # List of output variables produced by this configure script
 #
 AC_SUBST(BASHVERS)
 AC_SUBST(RELSTATUS)
 
 AC_ARG_WITH(bashdb-main, AC_HELP_STRING([--with-bashdb-main],
-		  [location of bashdb-main.inc]), BASHDB_MAIN=$withval)
+		  [location of bashdb-main.inc]),
+		  BASHDB_MAIN=$withval,
+		  ${ac_default_prefix/prefix}/bashdb/bashdb-main.inc)
+AC_SUBST(BASHDB_MAIN)
 
-# See if we build set0.c
-AC_ARG_WITH(bash-src, AC_HELP_STRING([--with-bash-src],
-		  [location of bash OK_BASH_VERS source code]),
-		  BASH_SRC=$withval)
-AC_SUBST(BASH_SRC)
-AC_PROG_CC
-if test x"$BASH_SRC" != x ; then
-   if test ! -d $BASH_SRC ; then
-     AC_MSG_ERROR([bash source directory ($BASH_SRC) does not seem to be a directory])
-   else
-     AM_PROG_CC_C_O
-     dnl We run a C compiler to get macro EXEEXT set and possibly readarray.c.
-     build_set0=$BASH_SRC
-     AC_CHECK_HEADERS(unistd.h string.h,,
-         [AC_MSG_WARN([Missing some C headers. Disabling set0])
-         build_set0=])
-   fi
-fi
-AM_PROG_LIBTOOL
-AM_CONDITIONAL(BUILD_BUILTINS, test x"$build_set0" != x)
-PIC=$lt_prog_compiler_pic
-WL=$lt_prog_compiler_wl
-AC_SUBST(PIC)
-AC_SUBST(WL)
 AC_SUBST(DIFF)
 AC_SUBST(DIFF_OPTS)
 AC_PATH_PROG(PERL, perl, false)
@@ -116,7 +93,8 @@ AC_ARG_WITH(POSIXSHELL, AC_HELP_STRING([--with-POSIXSHELL],
 
 if test "$SH_PROG" = "yes" || test "$SH_PROG" = "no" || test -z "$SH_PROG"
 then
-  AC_PATH_PROG(SH_PROG, POSIXSHELL, no)
+  bash_shell_dir=$(dirname $SHELL)
+  AC_PATH_PROG(SH_PROG, POSIXSHELL, no, PATH="$bash_shell_dir:$PATH")
 fi
 
 if test "$SH_PROG" = no; then
@@ -127,19 +105,21 @@ fi
 bash_version=`$SH_PROG --version`
 [bash_major=`$SH_PROG -c 'echo ${BASH_VERSINFO[0]}'`]
 [bash_minor=`$SH_PROG -c 'echo ${BASH_VERSINFO[1]}'`]
-bash_4_or_greater=no
+bash_5_or_greater=no
 case "${bash_major}.${bash_minor}" in
-  'OK_BASH_VERS' | '4.1' | '4.2' | '4.3')
-    bash_4_or_greater=yes
+  'OK_BASH_VERS' | '5.0' | '5.1')
+    bash_5_or_greater=yes
     ;;
   *)
     AC_MSG_WARN([You have Bash $bash_version installed.])
-    AC_MSG_ERROR([This package is only known to work with Bash 4.1-4.4.])
+    AC_MSG_ERROR([This package is only known to work with Bash 5.0])
     ;;
 esac
 
 AC_ARG_WITH(dbg-main, AC_HELP_STRING([--with-dbg-main],
-                  [location of dbg-main.sh]), DBGR_MAIN=$withval)
+                  [location of dbg-main.sh]),
+		  [DBGR_MAIN=$withval]
+		  [DBGR_MAIN=${ac_default_prefix/prefix}/bashdb/bashdb-main.inc])
 AC_SUBST(DBGR_MAIN)
 
 mydir=$(dirname $0)
@@ -214,7 +194,6 @@ fi
 #Makefiles
 AC_CONFIG_FILES([ \
         Makefile                  \
-        builtin/Makefile          \
         command/Makefile          \
         command/info_sub/Makefile \
         command/set_sub/Makefile  \
@@ -235,6 +214,8 @@ AC_CONFIG_FILES([ \
 AC_CONFIG_FILES([bashdb], [chmod +x DEBUGGER])
 AC_CONFIG_FILES([test/example/bugIFS.sh],
                 [chmod +x test/example/bugIFS.sh])
+AC_CONFIG_FILES([test/example/false.sh],
+                [chmod +x test/example/false.sh])
 AC_CONFIG_FILES([test/example/hanoi.sh],
                 [chmod +x test/example/hanoi.sh])
 AC_CONFIG_FILES([test/example/interrupt.sh],
@@ -251,12 +232,12 @@ AC_CONFIG_FILES([test/unit/test-break.sh],
                 [chmod +x test/unit/test-break.sh])
 AC_CONFIG_FILES([test/unit/test-cmd-complete.sh],
                 [chmod +x test/unit/test-cmd-complete.sh])
+AC_CONFIG_FILES([test/unit/test-cmd-info-variables.sh],
+                [chmod +x test/unit/test-cmd-info-variables.sh])
 AC_CONFIG_FILES([test/unit/test-cmd-eval.sh],
                 [chmod +x test/unit/test-cmd-eval.sh])
 AC_CONFIG_FILES([test/unit/test-columns.sh],
                 [chmod +x test/unit/test-columns.sh])
-AC_CONFIG_FILES([test/unit/test-eval.sh],
-                [chmod +x test/unit/test-eval.sh])
 AC_CONFIG_FILES([test/unit/test-file.sh],
                 [chmod +x test/unit/test-file.sh])
 AC_CONFIG_FILES([test/unit/test-filecache.sh],
@@ -277,13 +258,13 @@ AC_CONFIG_FILES([test/unit/test-require.sh],
 AC_CONFIG_FILES([test/unit/test-run.sh], [chmod +x test/unit/test-run.sh])
 AC_CONFIG_FILES([test/unit/test-save-restore.sh],
                 [chmod +x test/unit/test-save-restore.sh])
-AC_CONFIG_FILES([test/unit/test-set0.sh],
-                [chmod +x test/unit/test-set0.sh])
 AC_CONFIG_FILES([test/unit/test-sort.sh],
                 [chmod +x test/unit/test-sort.sh])
 AC_CONFIG_FILES([test/unit/test-validate.sh],
                 [chmod +x test/unit/test-validate.sh])
 
+AC_CONFIG_FILES([test/integration/test-bash-rematch],
+                [chmod +x test/integration/test-bash-rematch])
 AC_CONFIG_FILES([test/integration/test-bug-break],
                 [chmod +x test/integration/test-bug-break])
 AC_CONFIG_FILES([test/integration/test-bug-step-subshell],

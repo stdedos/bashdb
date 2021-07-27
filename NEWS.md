@@ -1,3 +1,42 @@
+Version 5.0-0.1.1.2 gecko gecko
+-------------------------------
+
+* Save/restore BASH_REMATCH more reliably Fixes https://sourceforge.net/p/bashdb/bugs/62/
+* Simpiler test-interrupt looping.  Thanks to Alastair Smith
+* Keep up with pygmentize ...  Using defaults will be less work in the end.
+  Fixes	https://sourceforge.net/p/bashdb/bugs/64/
+* Get all Pygments style a user has installednot just builtins
+  Thanks are due to John Purnell. See https://sourceforge.net/p/bashdb/tickets/4/
+* Determine BASH_REMATCH value based on BASH_REMATCH value rather than a regexp on
+  the last bash command. This is flaky, but less so.
+* Better BASH_REMATCH save/restore...  restore $1, $2, etc.
+* Set BASH_REMATCH in eval
+* Add "!" suffix to "kill" command
+* Document fixes and improvements
+* Track $0 when it changes inside debugged progam.
+
+Version 5.0-0.1.1.1
+--------------------
+
+* Document "condition" better
+* Show history before running it
+* Document "info variables" better.
+* Remove markdown bug.
+* Add -x, -r, -i flags to info `show variables`, and add est
+* Fix some small typos in comments
+* Properly filter `_Dbg_` variables out of "info var"
+* Update docs remove mention of $0 not set. In bash 5.0 $0 is set.
+
+
+Version 5.0-0.1.1.0 Labor Day
+------------------------------
+
+Sept 3, 2019
+
+* Revise for Bash 5.0
+* Use BASH_ARGV0
+* remove custom builtins; all of our internal bash fns are now bash internal functions
+
 Version 4.4-0.1.0.1  L'il sis 55
 --------------------------------
 

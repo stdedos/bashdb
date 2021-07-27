@@ -12,8 +12,8 @@ $ make ChangeLog
 * Go over `Changelog` and add `NEWS.md`. Update date of release.
 
 ```
-  export BASHDB_MAJOR=4.4   # adjust
-  export BASHDB_MINOR=1.0.1 # adjust
+  export BASHDB_MAJOR=5.0   # adjust
+  export BASHDB_MINOR=1.1.1 # adjust
   export BASHDB_VERSION=${BASHDB_MAJOR}-${BASHDB_MINOR} # adjust
 ```
 
@@ -41,7 +41,7 @@ git checkout master
 git merge <branch>
 ```
 
-Use the GUI
+Use the GUI https://sourceforge.net/projects/bashdb/files/bashdb
 
 create new folder, right click to set place to upload and
 hit upload button.
@@ -56,7 +56,7 @@ $ cd doc
 $ rm *.html
 $ make
 $ scp *.html rockyb,bashdb@web.sourceforge.net:htdocs
-$ # scp *.html rockyb,bashdb@web.sourceforge.net:/home/groups/b/ba/bashdb/htdocs/
+$ # scp -i ~/.ssh/id_rsa_sourceforge *.html rockyb,bashdb@web.sourceforge.net:/home/groups/b/ba/bashdb/htdocs/
 ```
 
 * Bump version in configure.ac and add "dev". See place above in

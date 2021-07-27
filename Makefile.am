@@ -1,4 +1,4 @@
-#   Copyright (C) 2002, 2004-2008, 2011-2012 Rocky Bernstein
+#   Copyright (C) 2002, 2004-2008, 2011-2012, 2019-2020 Rocky Bernstein
 #   <rocky@gnu.org>
 #
 #   This program is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@
 
 AUTOMAKE_OPTIONS = dist-bzip2
 
-SUBDIRS = command builtin init lib data doc test
+SUBDIRS = command init lib data doc test
 
 pkgdata_DATA =       \
        dbg-main.sh   \
-       dbg-set-d-vars.inc  \
+       set-d-vars.sh  \
        bashdb-main.inc     \
        bashdb-trace        \
        bashdb-part2.sh     \
@@ -42,7 +42,7 @@ MOSTLYCLEANFILES = *.orig *.rej
 
 EXTRA_DIST = bashdb.in bashdb-trace.in bashdb-main.inc.in \
 	     compute-prefix.sh \
-	     $(pkgdata_DATA) acinclude.m4 THANKS \
+	     $(pkgdata_DATA) acinclude.m4 THANKS.md \
 	     README-git.md README.md NEWS.md \
 	     make-check-filter.rb check-prefix.sh \
 	     ChangeLog ChangeLog.0

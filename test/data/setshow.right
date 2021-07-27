@@ -293,9 +293,10 @@ of promoting the sharing and reuse of software generally.
 +show badcommand
 ** Unknown show subcommand: badcommand
 ** Show subcommands are:
-**   alias     autoeval  commands  different    highlight  prompt  version
-**   annotate  autolist  copying   directories  history    style   warranty
-**   args      basename  debug     editing      listsize   tty     width
+**   alias     autolist  debug        filename-display  prompt   warranty
+**   annotate  basename  different    highlight         style    width
+**   args      commands  directories  history           tty
+**   autoeval  copying   editing      listsize          version
 +another-bad-command
 ** Undefined command "another-bad-command". Try "help".
 +show
@@ -304,11 +305,12 @@ args        : Argument list to give script when debugged program starts is:
        "-L data/setshow.cmd example/dbg-test2.sh testarg1 testarg2".
 autoeval    : Evaluate unrecognized commands is off.
 autolist    : Auto run of 'list' command is off.
-basename    : Show short filenames (the basename) in debug output is on.
+basename    : Show short filenames (the basename) in is on.
 debug       : Allow debugging the debugger is off.
-different   : Show stepping forces a new line is off.
+different   : Stepping forces stopping at a new line is off.
 editing     : Editing of command lines as they are typed is on.
   Edit style is emacs.
+filename-display: is basename.
 highlight   : Syntax highlight in source listings is off.
 history     --
   filename: The filename in which to record the command history is
